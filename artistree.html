@@ -61,6 +61,10 @@ document.addEventListener('ended', function(_player) {
 
 body {
    font-family: "Times New Roman", Times, serif;
+
+   zoom: 1.25; /* Scales everything to 125% */
+   -moz-transform: scale(1.25); /* Fallback for older Firefox versions */
+   -moz-transform-origin: 0 0;
 }
 
 .header {
