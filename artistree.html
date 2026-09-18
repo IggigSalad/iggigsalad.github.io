@@ -6,12 +6,12 @@
 <title>Iggig Salad - &#9835; Music Gallery &#9835;</title>
 
 <script>
-
+/*
 screen.orientation.addEventListener("change", () => {
    alert("yep");
    document.getElementById("screentext").innerHTML = `The orientation of the screen is: ${screen.orientation}`;
 });
-
+*/
 // When an audio player is being played, all other audio players will be stopped.
 document.addEventListener('play', function(_player) {
 
@@ -70,6 +70,7 @@ document.addEventListener('ended', function(_player) {
 
 body {
    font-family: "Times New Roman", Times, serif;
+   min-width: 768px;
 }
 
 .header {
@@ -118,65 +119,85 @@ h2 {
 
 <body>
 
-<h2>&#9835; Music Gallery &#9835;</h2><br />
-<p id="screentext"></p>
+<h2>&#9835; Music Gallery &#9835;</h2>
 
-<div class="song">
-<div>
-<span class="header">&#9834; King Dedede's Castle</span><br />
-<marquee>Kirby 64: The Crystal Shards</marquee>
+<div class="song" id="song">
+   <div>
+      <span class="header">&#9834;</span><br />
+      <marquee></marquee>
+   </div>
+   <audio controls>
+      <source />
+   </audio>
 </div>
 
-<audio controls>
-<source src="King Dedede's Castle.mp3" />
-</audio>
-</div>
+<script>
 
-<div class="song">
-<div>
-<span class="header">&#9834; On The Beach</span><br />
-<marquee>Yoshi's Story</marquee>
-</div>
+var song_list = [
+   {
+      title: "File Select",
+      album: "Kirby 64: The Crystal Shards",
+      source: "https://lambda.vgmtreasurechest.com/soundtracks/kirby-the-crystal-shards/juvxdcsrrb/1-02.%20File%20Select.mp3",
+   },
+   {
+      title: "King Dedede's Castle",
+      album: "Kirby 64: The Crystal Shards",
+      source: "King Dedede's Castle.mp3",
+   },
+   {
+      title: "On The Beach",
+      album: "Yoshi's Story",
+      source: "https://lambda.vgmtreasurechest.com/soundtracks/yoshi-s-story-nintendo-64-gamerip/hylelgioau/05.%20On%20The%20Beach.mp3",
+   },
+   {
+      title: "Come Back To Me",
+      album: "Yoshi's Story",
+      source: "https://lambda.vgmtreasurechest.com/soundtracks/yoshi-s-story-nintendo-64-gamerip/mpznddqujp/17.%20Come%20Back%20To%20Me.mp3",
+   },
+   {
+      title: "Rock Star",
+      album: "Kirby 64: The Crystal Shards",
+      source: "https://lambda.vgmtreasurechest.com/soundtracks/kirby-the-crystal-shards/isteyjcmma/1-22.%20Rock%20Star.mp3",
+   },
+   {
+      title: "Ruins",
+      album: "Kirby 64: The Crystal Shards",
+      source: "https://lambda.vgmtreasurechest.com/soundtracks/kirby-the-crystal-shards/twmqtorusz/1-23.%20Ruins.mp3",
+   },
+   {
+      title: "Overworld of Hyrule",
+      album: "The Legend of Zelda",
+      source: "https://lambda.vgmtreasurechest.com/soundtracks/the-legend-of-zelda-nes/xrrhlksi/02.%20Overworld%20of%20Hyrule.mp3",
+   },
+   {
+      title: "Mondo Greens",
+      album: "[REMIX] Kirby's Dream Land",
+      source: "Mondo Greens.wav",
+   },
+   {
+      title: "To Be Continued",
+      album: "Poke&#769;mon",
+      source: "To Be Continued.mp3",
+   },
+];
+
+var song_element = document.getElementById("song");
+song_element.remove();
+
+for (var _i = 0; _i < song_list.length; _i++) {
+   var _current_song = song_list[_i];
+   var _new_element = song_element.cloneNode(true);
+
+   _new_element.children[0].children[0].innerText += " " + _current_song.title;
+   _new_element.children[0].children[2].innerText += _current_song.album;
+   _new_element.children[1].children[0].src = _current_song.source;
+
+   document.body.appendChild(_new_element);
+}
+
+</script>
 
 &#9655;
-
-<audio controls>
-<source src="https://lambda.vgmtreasurechest.com/soundtracks/yoshi-s-story-nintendo-64-gamerip/hylelgioau/05.%20On%20The%20Beach.mp3" />
-</audio>
-</div>
-
-<div class="song">
-<div>
-<span class="header">&#9834; Rock Star</span><br />
-<marquee>Kirby 64: The Crystal Shards</marquee>
-</div>
-
-<audio controls>
-<source src="https://lambda.vgmtreasurechest.com/soundtracks/kirby-the-crystal-shards/isteyjcmma/1-22.%20Rock%20Star.mp3" />
-</audio>
-</div>
-
-<div class="song">
-<div>
-<span class="header">&#9834; Mondo Greens</span><br />
-<marquee>[REMIX] Kirby's Dream Land</marquee>
-</div>
-
-<audio controls>
-<source src="Mondo Greens.wav" />
-</audio>
-</div>
-
-<div class="song">
-<div>
-<span class="header">&#9834; To Be Continued</span><br />
-<marquee>Poke&#769;mon</marquee>
-</div>
-
-<audio controls>
-<source src="To Be Continued.mp3" />
-</audio>
-</div>
 
 <br />
 <br />
