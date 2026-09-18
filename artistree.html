@@ -55,12 +55,6 @@ document.addEventListener('ended', function(_player) {
 
 }, true);
 
-// Check if the user agent is a mobile device
-if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
-   document.body.classList.add('is-mobile');
-}
-
-
 </script>
 
 <style type="text/css">
@@ -69,13 +63,11 @@ body {
    font-family: "Times New Roman", Times, serif;
 }
 
-@media (max-width: 768px) {
-   body.is-mobile {
-      background-color: lightyellow;
-      zoom: 1.6; /* Scales everything to 160% */
-      -moz-transform: scale(1.6); /* Fallback for older Firefox versions */
-      -moz-transform-origin: 0 0;
-   }
+body and (orientation: portrait) {
+   background-color: lightyellow;
+   zoom: 1.6; /* Scales everything to 160% */
+   -moz-transform: scale(1.6); /* Fallback for older Firefox versions */
+   -moz-transform-origin: 0 0;
 }
 
 .header {
