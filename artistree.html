@@ -2,9 +2,15 @@
 <html>
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Iggig Salad - &#9835; Music Gallery &#9835;</title>
 
 <script>
+
+screen.orientation.addEventListener("change", () => {
+   alert("yep");
+   document.getElementById("screentext").innerHTML = `The orientation of the screen is: ${screen.orientation}`;
+});
 
 // When an audio player is being played, all other audio players will be stopped.
 document.addEventListener('play', function(_player) {
@@ -112,7 +118,8 @@ h2 {
 
 <body>
 
-<h2>&#9835; Music Gallery &#9835;</h2>
+<h2>&#9835; Music Gallery &#9835;</h2><br />
+<p id="screentext"></p>
 
 <div class="song">
 <div>
