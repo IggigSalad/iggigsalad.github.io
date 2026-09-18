@@ -87,7 +87,7 @@ body {
    gap: 4pt;
    display: flex;
    justify-content: space-between;
-   width: 560px;
+   width: 320px;
    border-radius: 32px;
    border-color: blue;
    color: blue;
@@ -102,7 +102,7 @@ body {
    gap: 4pt;
    display: flex;
    justify-content: space-between;
-   width: 560px;
+   width: 320px;
    border-radius: 32px;
    border-color: red;
    background-color: lightyellow;
@@ -121,14 +121,17 @@ h2 {
 
 <h2>&#9835; Music Gallery &#9835;</h2>
 
+<audio controls style="display: flex; margin: auto;">
+      <source />
+</audio>
+
 <div class="song" id="song">
    <div>
       <span class="header">&#9834;</span><br />
       <marquee></marquee>
-   </div>
-   <audio controls>
       <source />
-   </audio>
+   </div>
+   <button style="border-radius:32px;">Play</button>
 </div>
 
 <script>
@@ -188,9 +191,9 @@ for (var _i = 0; _i < song_list.length; _i++) {
    var _current_song = song_list[_i];
    var _new_element = song_element.cloneNode(true);
 
-   _new_element.children[0].children[0].innerText += " " + _current_song.title;
-   _new_element.children[0].children[2].innerText += _current_song.album;
-   _new_element.children[1].children[0].src = _current_song.source;
+   _new_element.children[0].children[0].innerHTML += " " + _current_song.title;
+   _new_element.children[0].children[2].innerHTML += _current_song.album;
+   _new_element.children[0].children[3].src = _current_song.source;
 
    document.body.appendChild(_new_element);
 }
