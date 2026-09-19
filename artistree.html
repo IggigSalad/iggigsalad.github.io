@@ -63,7 +63,7 @@ h2 {
       <span class="header">&#9834;</span><br />
       <marquee></marquee>
    </div>
-   <button style="font-size:12pt; font-weight:bold; margin-top:auto; margin-bottom:auto; padding:auto; border-radius:32px; width:32px; height:32px;">&#9655;</button>
+   <button style="font-size:12pt; font-weight:bold; margin-top:auto; margin-bottom:auto; padding:auto; border-radius:32px; width:32px; height:32px;">&#9834;</button>
 </div>
 
 <script src="song-list.js"></script>
@@ -128,18 +128,24 @@ audio_player_element.addEventListener('play', function() {
 
       if (_song_entry.dataset.index == current_song_index) {
          _song_entry.classList.add("highlighted");
+         _song_entry.children[1].innerHTML = "&#9208";
          continue;
       }
 
       _song_entry.classList.remove("highlighted");
+      _song_entry.children[1].innerHTML = "&#9834";
    }
 
    navigator.mediaSession.playbackState = "playing";
-
+/*
+   TODO: use this code
+      if ("mediaSession" in navigator) {
+   EVERY TIME I do media session stuff
+*/
    if ("mediaSession" in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
          title: song_list[current_song_index].title,
-         artist: song_list[current_song_index].artist,
+         artist: song_list[current_song_index].album,
          album: song_list[current_song_index].album,
          artwork: [
             {
@@ -221,6 +227,23 @@ audio_player_element.addEventListener('play', function() {
 
 
 audio_player_element.addEventListener('pause', function() {
+   var _song_entries = document.getElementsByClassName('song');
+
+   for (var _i = 0; _i < _song_entries.length; _i++) {
+      var _song_entry = _song_entries[_i];
+
+      if (_song_entry.dataset.index == current_song_index) {
+         _song_entry.children[1].innerHTML = "&#9834";
+         continue;
+      }
+   }
+
+
+
+
+
+
+
    navigator.mediaSession.playbackState = "paused";
 //      var _element = _player.target.parentElement;
 //      _element.classList.remove("song-highlighted");
