@@ -33,13 +33,22 @@ body {
    width: 320px;
    border-radius: 32px;
    border-color: blue;
+   background-color: white;
    color: blue;
+}
+
+.song:hover {
+   background-color: lightcyan;
 }
 
 .highlighted {
    border-color: red;
    background-color: lightyellow;
    color: red;
+}
+
+.highlighted:hover {
+   background-color: pink;
 }
 
 h2 {
@@ -54,8 +63,8 @@ h2 {
 
 <h2>&#9835; Music Gallery &#9835;</h2>
 
-<div style="text-align: center;">Now playing: <span id="now-playing" style="font-weight: bold;"></span></div>
-<audio id="audio-player" controls style="display: flex; margin: auto;"></audio>
+<div style="text-align:center;">Now playing: <span id="now-playing" style="font-weight:bold;"></span></div>
+<audio id="audio-player" controls style="display:flex; margin:auto;"></audio>
 <br />
 
 <div class="song" id="song-template">
@@ -63,9 +72,10 @@ h2 {
       <span class="header">&#9834;</span><br />
       <marquee></marquee>
    </div>
-   <button style="font-size:12pt; font-weight:bold; margin-top:auto; margin-bottom:auto; padding:auto; border-radius:32px; width:32px; height:32px;">&#9834;</button>
+   <span style="background:transparent; font-size:12pt; margin-top:auto; margin-bottom:auto; padding:auto; width:32px;">&#9654;</span>
 </div>
 
+<!-- Import the list of songs. -->
 <script src="song-list.js"></script>
 
 <script>
@@ -128,17 +138,17 @@ audio_player_element.addEventListener('play', function() {
 
       if (_song_entry.dataset.index == current_song_index) {
          _song_entry.classList.add("highlighted");
-         _song_entry.children[1].innerHTML = "&#9208";
+         _song_entry.children[1].innerHTML = "&#10074;&#10074;";
          continue;
       }
 
       _song_entry.classList.remove("highlighted");
-      _song_entry.children[1].innerHTML = "&#9834";
+      _song_entry.children[1].innerHTML = "&#9654;";
    }
 
    navigator.mediaSession.playbackState = "playing";
 /*
-   TODO: use this code
+   TODO: use this code:
       if ("mediaSession" in navigator) {
    EVERY TIME I do media session stuff
 */
@@ -194,12 +204,15 @@ audio_player_element.addEventListener('play', function() {
       navigator.mediaSession.setActionHandler("seekforward", () => { /* Code excerpted. */ });
 
       navigator.mediaSession.setActionHandler("seekto", (details) => {
+         myMedia.currentTime = details.seekTime;
+/*
          // Check if the fastSeek property is present for optimized scrolling performance
          if (details.fastSeek && 'fastSeek' in myMedia) {
             myMedia.fastSeek(details.seekTime);
          } else {
             myMedia.currentTime = details.seekTime;
          }
+*/
       });
 
       navigator.mediaSession.setActionHandler("previoustrack", () => {
@@ -233,7 +246,7 @@ audio_player_element.addEventListener('pause', function() {
       var _song_entry = _song_entries[_i];
 
       if (_song_entry.dataset.index == current_song_index) {
-         _song_entry.children[1].innerHTML = "&#9834";
+         _song_entry.children[1].innerHTML = "&#9654;";
          continue;
       }
    }
