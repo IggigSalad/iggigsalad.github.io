@@ -3,74 +3,17 @@
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="iggicon.png" />
 <title>Iggig Salad - &#9835; Music Gallery &#9835;</title>
 
-<script>
-/*
-screen.orientation.addEventListener("change", () => {
-   alert("yep");
-   document.getElementById("screentext").innerHTML = `The orientation of the screen is: ${screen.orientation}`;
-});
-*/
-// When an audio player is being played, all other audio players will be stopped.
-document.addEventListener('play', function(_player) {
-
-   // Change the class of the audio player that is playing, so it appears highlighted.
-   var _element = _player.target.parentElement;
-   _element.classList.remove("song");
-   _element.classList.add("song-highlighted");
-
-   // Loop through each audio element.
-   var _audio_players = document.getElementsByTagName('audio');
-   for (var _i = 0; _i < _audio_players.length; _i++) {
-      var _audio_player = _audio_players[_i];
-
-      // If this audio player is the one that started playing, then skip it.
-      if (_audio_player == _player.target) {
-         continue;
-      }
-
-      // Pause this audio player and reset it to the beginning.
-      _audio_player.pause();
-      _audio_player.currentTime = 0;
-   }
-}, true);
-
-// When one of our audio players has been paused, change its class, so it no longer appears highlighted.
-document.addEventListener('pause', function(_player) {
-      var _element = _player.target.parentElement;
-      _element.classList.remove("song-highlighted");
-      _element.classList.add("song");
-}, true);
-
-//
-document.addEventListener('ended', function(_player) {
-   var _next_audio_player_index = 0;
-   var _audio_players = document.getElementsByTagName('audio');
-
-   for (var _i = 0; _i < _audio_players.length; _i++) {
-      var _audio_player = _audio_players[_i];
-
-      // If this audio player is the one that started playing, then skip it.
-      if (_audio_player == _player.target) {
-         _next_audio_player_index = (_i + 1) % _audio_players.length;
-         break;
-      }
-   }
-
-   // Play the next song on the page.
-   var _next_audio_player = _audio_players[_next_audio_player_index];
-   _next_audio_player.play();
-
-}, true);
-
-</script>
-
-<style type="text/css">
+<style type = "text/css">
 
 body {
    font-family: "Times New Roman", Times, serif;
    min-width: 768px;
+
+   -webkit-user-select: none; /* Safari */
+   user-select: none;         /* Standard syntax */
 }
 
 .header {
@@ -93,17 +36,7 @@ body {
    color: blue;
 }
 
-.song-highlighted {
-   border-style: dotted;
-   margin: auto;
-   margin-top: 4pt;
-   margin-bottom: 4pt;
-   padding: 4pt 4pt 4pt 16pt;
-   gap: 4pt;
-   display: flex;
-   justify-content: space-between;
-   width: 320px;
-   border-radius: 32px;
+.highlighted {
    border-color: red;
    background-color: lightyellow;
    color: red;
@@ -121,86 +54,192 @@ h2 {
 
 <h2>&#9835; Music Gallery &#9835;</h2>
 
-<audio controls style="display: flex; margin: auto;">
-      <source />
-</audio>
+<div style="text-align: center;">Now playing: <span id="now-playing" style="font-weight: bold;"></span></div>
+<audio id="audio-player" controls style="display: flex; margin: auto;"></audio>
+<br />
 
-<div class="song" id="song">
+<div class="song" id="song-template">
    <div>
       <span class="header">&#9834;</span><br />
       <marquee></marquee>
-      <source />
    </div>
-   <button style="border-radius:32px;">Play</button>
+   <button style="font-size:12pt; font-weight:bold; margin-top:auto; margin-bottom:auto; padding:auto; border-radius:32px; width:32px; height:32px;">&#9655;</button>
 </div>
 
+<script src="song-list.js"></script>
+
 <script>
+var audio_player_element = document.getElementById("audio-player");
+var song_template_element = document.getElementById("song-template");
+var now_playing_element = document.getElementById("now-playing");
+var current_song_index = -1;
 
-var song_list = [
-   {
-      title: "File Select",
-      album: "Kirby 64: The Crystal Shards",
-      source: "https://lambda.vgmtreasurechest.com/soundtracks/kirby-the-crystal-shards/juvxdcsrrb/1-02.%20File%20Select.mp3",
-   },
-   {
-      title: "King Dedede's Castle",
-      album: "Kirby 64: The Crystal Shards",
-      source: "King Dedede's Castle.mp3",
-   },
-   {
-      title: "On The Beach",
-      album: "Yoshi's Story",
-      source: "https://lambda.vgmtreasurechest.com/soundtracks/yoshi-s-story-nintendo-64-gamerip/hylelgioau/05.%20On%20The%20Beach.mp3",
-   },
-   {
-      title: "Come Back To Me",
-      album: "Yoshi's Story",
-      source: "https://lambda.vgmtreasurechest.com/soundtracks/yoshi-s-story-nintendo-64-gamerip/mpznddqujp/17.%20Come%20Back%20To%20Me.mp3",
-   },
-   {
-      title: "Rock Star",
-      album: "Kirby 64: The Crystal Shards",
-      source: "https://lambda.vgmtreasurechest.com/soundtracks/kirby-the-crystal-shards/isteyjcmma/1-22.%20Rock%20Star.mp3",
-   },
-   {
-      title: "Ruins",
-      album: "Kirby 64: The Crystal Shards",
-      source: "https://lambda.vgmtreasurechest.com/soundtracks/kirby-the-crystal-shards/twmqtorusz/1-23.%20Ruins.mp3",
-   },
-   {
-      title: "Overworld of Hyrule",
-      album: "The Legend of Zelda",
-      source: "https://lambda.vgmtreasurechest.com/soundtracks/the-legend-of-zelda-nes/xrrhlksi/02.%20Overworld%20of%20Hyrule.mp3",
-   },
-   {
-      title: "Mondo Greens",
-      album: "[REMIX] Kirby's Dream Land",
-      source: "Mondo Greens.wav",
-   },
-   {
-      title: "To Be Continued",
-      album: "Poke&#769;mon",
-      source: "To Be Continued.mp3",
-   },
-];
+// Remove the template element from the page.
+song_template_element.remove();
 
-var song_element = document.getElementById("song");
-song_element.remove();
-
+// Create entries on the page for each song in our song list.
 for (var _i = 0; _i < song_list.length; _i++) {
    var _current_song = song_list[_i];
-   var _new_element = song_element.cloneNode(true);
+   var _new_element = song_template_element.cloneNode(true);
 
+   // Write the current song's information to the new element.
+   _new_element.dataset.index = _i;
    _new_element.children[0].children[0].innerHTML += " " + _current_song.title;
    _new_element.children[0].children[2].innerHTML += _current_song.album;
-   _new_element.children[0].children[3].src = _current_song.source;
+
+   // When the song element is clicked, play its associated song.
+   _new_element.addEventListener('click', function() {
+
+      // If this song isn't currently playing, then start playing it.
+      if (current_song_index != this.dataset.index) {
+         current_song_index = this.dataset.index;
+         var _current_song = song_list[current_song_index];
+
+         audio_player_element.src = _current_song.source;
+         now_playing_element.innerHTML = _current_song.title;
+         audio_player_element.play();
+         return;
+      }
+
+      // If this song is currently playing, clicking the element will pause it.
+      if (audio_player_element.paused) {
+         audio_player_element.play();
+      } else {
+         audio_player_element.pause();
+      }
+   });
 
    document.body.appendChild(_new_element);
 }
 
+/*
+screen.orientation.addEventListener("change", () => {
+   alert("yep");
+   document.getElementById("screentext").innerHTML = `The orientation of the screen is: ${screen.orientation}`;
+});
+*/
+
+// When a song is being played, highlight it on the page.
+audio_player_element.addEventListener('play', function() {
+   var _song_entries = document.getElementsByClassName('song');
+
+   for (var _i = 0; _i < _song_entries.length; _i++) {
+      var _song_entry = _song_entries[_i];
+
+      if (_song_entry.dataset.index == current_song_index) {
+         _song_entry.classList.add("highlighted");
+         continue;
+      }
+
+      _song_entry.classList.remove("highlighted");
+   }
+
+
+navigator.mediaSession.playbackState = "playing";
+
+if ("mediaSession" in navigator) {
+  navigator.mediaSession.metadata = new MediaMetadata({
+    title: "Unforgettable",
+    artist: "Nat King Cole",
+    album: "The Ultimate Collection (Remastered)",
+    artwork: [
+      {
+        src: "https://dummyimage.com/96x96",
+        sizes: "96x96",
+        type: "image/png",
+      },
+      {
+        src: "https://dummyimage.com/128x128",
+        sizes: "128x128",
+        type: "image/png",
+      },
+      {
+        src: "https://dummyimage.com/192x192",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        src: "https://dummyimage.com/256x256",
+        sizes: "256x256",
+        type: "image/png",
+      },
+      {
+        src: "https://dummyimage.com/384x384",
+        sizes: "384x384",
+        type: "image/png",
+      },
+      {
+        src: "https://dummyimage.com/512x512",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+  });
+
+  navigator.mediaSession.setActionHandler("play", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("pause", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("stop", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("seekbackward", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("seekforward", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("seekto", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("previoustrack", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("nexttrack", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("skipad", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("togglecamera", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("togglemicrophone", () => {
+    /* Code excerpted. */
+  });
+  navigator.mediaSession.setActionHandler("hangup", () => {
+    /* Code excerpted. */
+  });
+}
+}, true);
+
+/*
+// When one of our audio players has been paused, change its class, so it no longer appears highlighted.
+document.addEventListener('pause', function(_player) {
+      var _element = _player.target.parentElement;
+      _element.classList.remove("song-highlighted");
+      _element.classList.add("song");
+}, true);
+*/
+
+// When the current song has finished, advance to the next one.
+audio_player_element.addEventListener('ended', function() {
+   current_song_index = (current_song_index + 1) % song_list.length;
+   var _current_song = song_list[current_song_index];
+
+   audio_player_element.src = _current_song.source;
+   now_playing_element.innerHTML = _current_song.title;
+   audio_player_element.play();
+}, true);
+
+
+
+
 </script>
 
-&#9655;
+
 
 <br />
 <br />
