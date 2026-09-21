@@ -44,4 +44,39 @@ var song_list = [
       album: "Poke&#769;mon",
       source: "To Be Continued.mp3",
    },
+   {
+      title: "White City",
+      album: "Poke&#769;mon Stadium 2",
+      source: "https://jetta.vgmtreasurechest.com/soundtracks/pokemon-stadium-2/gmqqffpvnj/1-02.%20White%20City.mp3",
+   },
+   {
+      title: "Move Relearned!",
+      album: "Poke&#769;mon Stadium 2",
+      source: "https://jetta.vgmtreasurechest.com/soundtracks/pokemon-stadium-2/fvdoshcbyc/1-35.%20Move%20Relearned%21.mp3",
+   },
+   {
+      title: "My Room",
+      album: "Poke&#769;mon Stadium 2",
+      source: "https://jetta.vgmtreasurechest.com/soundtracks/pokemon-stadium-2/zqysatjcoy/2-18.%20My%20Room.mp3",
+   },
+   {
+      title: "Mystery Gift",
+      album: "Poke&#769;mon Stadium 2",
+      source: "https://jetta.vgmtreasurechest.com/soundtracks/pokemon-stadium-2/ytwumxinzm/2-44.%20Mystery%20Gift.mp3",
+   },
+   {
+      title: "Streaming Stampede",
+      album: "Poke&#769;mon Stadium 2",
+      source: "https://jetta.vgmtreasurechest.com/soundtracks/pokemon-stadium-2/eeqlgyxmym/2-28.%20Streaming%20Stampede.mp3",
+   },
+   {
+      title: "Mini-Game Complete",
+      album: "Poke&#769;mon Stadium 2",
+      source: "https://jetta.vgmtreasurechest.com/soundtracks/pokemon-stadium-2/fhxfregeqj/2-33.%20Mini-Game%20Complete.mp3",
+   },
+   {
+      title: "Quiz",
+      album: "Poke&#769;mon Stadium 2",
+      source: "https://jetta.vgmtreasurechest.com/soundtracks/pokemon-stadium-2/pzohygqwmb/2-42.%20Quiz.mp3",
+   },
 ];
