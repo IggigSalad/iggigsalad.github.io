@@ -64,12 +64,14 @@ h3 {
 
 <body>
 
+<div style="position:sticky; top:0; padding-top:0; margin-top:0; background:white; z-index:1;">
 <h3>Iggig Salad</h3>
 <h2>&#9835; Music Gallery &#9835;</h2>
 
 <div style="text-align:center;">Now playing: <span id="now-playing" style="font-weight:bold;"></span></div>
 <audio id="audio-player" controls style="display:flex; margin:auto;"></audio>
 <br />
+</div>
 
 <div class="song" id="song-template">
    <div>
@@ -105,8 +107,8 @@ for (var _i = 0; _i < song_list.length; _i++) {
    _new_element.addEventListener('click', function() {
 
       // If this song isn't currently playing, then start playing it.
-      if (current_song_index != this.dataset.index) {
-         current_song_index = this.dataset.index;
+      if (current_song_index != Number(this.dataset.index)) {
+         current_song_index = Number(this.dataset.index);
          var _current_song = song_list[current_song_index];
 
          audio_player_element.src = _current_song.source;
@@ -140,7 +142,7 @@ audio_player_element.addEventListener('play', function() {
    for (var _i = 0; _i < _song_entries.length; _i++) {
       var _song_entry = _song_entries[_i];
 
-      if (_song_entry.dataset.index == current_song_index) {
+      if (Number(_song_entry.dataset.index) == current_song_index) {
          _song_entry.classList.add("highlighted");
          _song_entry.children[1].innerHTML = "&#10074;&#10074;";
          continue;
@@ -249,7 +251,7 @@ audio_player_element.addEventListener('pause', function() {
    for (var _i = 0; _i < _song_entries.length; _i++) {
       var _song_entry = _song_entries[_i];
 
-      if (_song_entry.dataset.index == current_song_index) {
+      if (Number(_song_entry.dataset.index) == current_song_index) {
          _song_entry.children[1].innerHTML = "&#9654;";
          continue;
       }
