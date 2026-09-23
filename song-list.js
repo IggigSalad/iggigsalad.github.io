@@ -7,7 +7,7 @@ var song_list = [
    {
       title: "King Dedede's Castle",
       album: "Kirby 64: The Crystal Shards",
-      source: "King Dedede's Castle.mp3",
+      source: "Music/King Dedede's Castle.mp3",
    },
    {
       title: "On The Beach",
@@ -35,14 +35,24 @@ var song_list = [
       source: "https://lambda.vgmtreasurechest.com/soundtracks/the-legend-of-zelda-nes/xrrhlksi/02.%20Overworld%20of%20Hyrule.mp3",
    },
    {
+      title: "Star Flower",
+      album: "Iggig in the Star Cave",
+      source: "Music/Star Flower (Title Theme).wav",
+   },
+   {
+      title: "Jam Idea",
+      album: "Iggig",
+      source: "Music/Jam Idea.wav",
+   },
+   {
       title: "Mondo Greens",
       album: "[REMIX] Kirby's Dream Land",
-      source: "Mondo Greens.wav",
+      source: "Music/Mondo Greens.wav",
    },
    {
       title: "To Be Continued",
       album: "Poke&#769;mon",
-      source: "To Be Continued.mp3",
+      source: "Music/To Be Continued.mp3",
    },
    {
       title: "White City",
