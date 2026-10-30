@@ -1,12 +1,147 @@
+<!DOCTYPE html>
 <html>
 <head>
-
+<title>Iggig Salad</title>
 <link rel="icon" href="icon.png" />
+<style>
+
+body {
+
+//   margin: 0;
+//   padding: 0;
+//   aspect-ratio: 1;
+//   background-position-y: top;
+//   background-size: cover;
+//   width: 100%;
+
+   height: calc(2880px - 16px);
+   background-color: cornflowerblue;
+   background-image: url("tree.png");
+   background-repeat: no-repeat;
+   background-position-x: center;
+   background-position-y: bottom;
+   overflow-x: hidden;
+}
+
+canvas {
+   display: flex;
+   position: sticky;
+   top: 0;
+   left: 0;
+   z-index: -100;
+}
+
+.fixed-bottom {
+  position: fixed;
+  left: 128px;
+  bottom: 32px;
+  text-align: center;
+}
+
+</style>
+
 
 </head>
+
+
+
+
+
 <body>
 
-<a href="music-gallery.html">&#9835; Music Gallery &#9835;</a>
+<script>
+let hour = new Date().getHours();
+let time_of_day = "night";
+
+if (hour > 6 && hour <= 18) {
+   time_of_day = "day";
+}
+
+if (time_of_day == "night") {
+   document.body.style.backgroundColor = "midnightblue";
+}
+</script>
+
+ <!--
+<div style="position: fixed; top: 0;">
+<h1>Iggig Salad</h1>
+<br />
+<h2>You are at</h2>
+<h1>The Artistree</h1>
+</div>
+-->
+
+<img class="fixed-bottom" src="iggig-relaxed.png" alt="" />
+
+
+
+<!--
+<map id="imgmap20261026175620" name="imgmap20261026175620">
+<area shape="circle" alt="" title="" coords="386, 372, 22" href="" target="" />
+<area shape="circle" alt="" title="" coords="510, 347, 24" href="" target="" />
+
+</map>
+
+<img src="image-map.png" alt="" usemap="#imgmap20261026175620" />
+-->
+
+
+<a href="art-chocolate.html"><h1>Art Chocolate</h1></a>
+<a href="music-gallery.html"><h1>&#9835; Music Gallery &#9835;</h1></a>
+<br />
+
+<!--
+<img src="tree.png" alt="" />
+
+<canvas id="myCanvas">
+</canvas>
+ -->
+
+
+
+<script>
+
+let we_need_to_scroll_to_the_bottom = true;
+
+let savedName = sessionStorage.getItem('weve_done_it_before');
+if (savedName) {
+   we_need_to_scroll_to_the_bottom = false;
+}
+
+sessionStorage.setItem('weve_done_it_before', false);
+console.log('Data saved to session!');
+
+let is_at_bottom = 1;
+/*
+let c = document.getElementById("myCanvas");
+let ctx = c.getContext("2d");
+*/
+
+function updateCanvasSize() {
+/*
+   c.width = window.innerWidth;
+   c.height = window.innerHeight;
+
+   ctx.moveTo(0, 0);
+   ctx.lineTo(c.width, c.height);
+   ctx.stroke();
+*/
+   if (we_need_to_scroll_to_the_bottom) {
+      document.documentElement.scrollTop = 9999;
+      we_need_to_scroll_to_the_bottom = false;
+   }
+
+   requestAnimationFrame(updateCanvasSize);
+}
+
+window.addEventListener("load", () => {
+   requestAnimationFrame(updateCanvasSize);
+});
+
+document.body.scrollHeight = "1920px";
+
+</script>
+
 
 </body>
 </html>
