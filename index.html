@@ -5,37 +5,17 @@
 <link rel="icon" href="icon.png" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
+
 body {
    margin: 0;
    width: 100vw;
-   overflow-x: hidden;
-}
-
-.scroll-viewport {
-   display: flex;
-   width: 100vw;
-   overflow-x: hidden;
    height: 1920px;
-}
+   overflow-x: hidden;
 
-#background-image {
-   z-index: -9999;
-
-   position: absolute;
-   width: 1920px;
-   height: 1920px;
-   max-width: none;
-
-   /* THE MATH: Place the left edge exactly in the middle of the phone screen, 
-      then pull it back by exactly half of the image's total width (960px). */
-   left: 50%;
-   margin-left: -960px; 
-}
-
-.fixed-bottom {
-   position: absolute;//fixed;
-   left: 128px;
-   top: 2500px;
+   background-image: url("tree.png");
+   background-position: center;
+   background-repeat: no-repeat;
+   background-size: cover;
 }
 
 </style>
@@ -52,16 +32,10 @@ body {
 </div>
 -->
 
-<div class="scroll-viewport">
-
 <map id="background-map">
 <area shape="circle" alt="" title="" coords="386, 372, 22" href="" target="" />
 <area shape="circle" alt="" title="" coords="510, 347, 24" href="" target="" />
 </map>
-
-<!-- Draw the background. -->
-<img id="background-image" src="tree.png" alt="" usemap="#background-map" />
-</div>
 
 <!--
 <div style="position: fixed; top: 0;">
