@@ -3,27 +3,29 @@
 <head>
 <title>Iggig Salad</title>
 <link rel="icon" href="icon.png" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="minimum-scale=1.2, width=device-width, initial-scale=1.2, maximum-scale=1.2, user-scalable=no">
 <style>
 
 body {
-   margin: 0;
-   overflow: hidden;
-/*
    width: 100vw;
-   min-height: 100vh;
-   height: 960px;
+   margin: 0;
+   display: flex;
    overflow-x: hidden;
+   justify-content: center;
+/*
    background-image: url("tree.png");
+   background-size: 100% 100%;
    background-position: center bottom;
    background-repeat: no-repeat;
    background-size: cover;
 */
 }
 
-canvas {
+img {
+   min-width: 1280px;
+   min-height: 1280px;
    width: 100vw;
-   height: 100vh;
+   height: 100vw;
 }
 
 </style>
@@ -40,20 +42,16 @@ canvas {
 </div>
 -->
 
+<img src="tree.png" />
 
-<!--
-<div style="position: fixed; top: 0;">
-<h1>Iggig Salad</h1>
-<br />
-<h2>You are at</h2>
-<h1>The Artistree</h1>
-</div>
-
-<img class="fixed-bottom" src="iggig-relaxed.png" alt="" />
--->
 
 <!--
 <a href="art-chocolate.html">
+<h1>Art Chocolate</h1>
+<h1>Art Chocolate</h1>
+<h1>Art Chocolate</h1>
+<h1>Art Chocolate</h1>
+<h1>Art Chocolate</h1>
 <h1>Art Chocolate</h1>
 </a>
 
@@ -62,81 +60,14 @@ canvas {
 </a>
 -->
 
-<div style="display:none;">
-<img id="scream" src="tree.png">
-</div>
-
-<canvas id="myCanvas" width="200px" height="100px">
-</canvas>
-
 <script>
-const canvas = document.getElementById("myCanvas");
-const context = canvas.getContext("2d");
-const image = document.getElementById("scream");
-
-const min_view_width = 1280;
-let scale = 1;
-
-const camera = {
-   x: 0,
-   y: 9999,
-   deltaY: 0,
-};
-
-/*
-   The camera's scroll position is stored locally,
-   so the view can remain where it was if returning to this page.
-*/
-let stored_scroll_y = sessionStorage.getItem('homepage_scroll_y');
-if (stored_scroll_y != null) camera.y = stored_scroll_y;
-
-/*
-   Update the canvas' internal size when the window is resized.
-*/
-function update_canvas_size() {
-   canvas.width = window.innerWidth * window.devicePixelRatio;
-   canvas.height = window.innerHeight * window.devicePixelRatio;
-   scale = Math.max(canvas.width, min_view_width) / 1920;
-}
-
-window.addEventListener('resize', update_canvas_size);
-update_canvas_size();
-
-/*
-   Get the scroll wheel's input.
-*/
-canvas.addEventListener('wheel', (event) => {
-   event.preventDefault();
-   camera.deltaY += event.deltaY;
-}, {
-   passive: false
-});
-
-function step() {
-   let _image_width = 1920 * scale;
-   let _image_height = 1920 * scale;
-
-   let _x = (canvas.width / 2) - (_image_width / 2);
-   // Calculates maximum upward scroll limit based on the height differences
-   let maxScroll = Math.max(0, _image_height - canvas.height);
-
-   // Update scroll position and lock inside boundaries
-   camera.y = Math.min(Math.max(camera.y + (camera.deltaY * scale), 0), maxScroll);
-   camera.deltaY = 0;
-   sessionStorage.setItem('homepage_scroll_y', camera.y);
-
-   // Wipes the canvas clean before redraws to prevent smearing
-   context.clearRect(0, 0, canvas.width, canvas.height);
-
-   // Draw the tree image based on the scroll camera position
-   // -camera.y moves the drawing context upwards as you scroll down
-   context.drawImage(image, _x, -camera.y, _image_width, _image_height);
-
-   requestAnimationFrame(step);
-}
+let first_visit = !sessionStorage.getItem('homepage_was_visited');
+sessionStorage.setItem('homepage_was_visited', true);
 
 window.addEventListener("load", () => {
-   requestAnimationFrame(step);
+   if first_visit {
+      document.body.scrollTop = 9999;
+   }
 });
 
 let hour = new Date().getHours();
