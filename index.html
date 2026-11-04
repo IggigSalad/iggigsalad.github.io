@@ -15,17 +15,21 @@ body {
    display: flex;
    width: 100vw;
    overflow-x: hidden;
-   overflow-y: visible;
+   height: 1920px;
 }
 
 #background-image {
    z-index: -9999;
 
    position: absolute;
-   left: 50%;
-   transform: translateX(-50%);
-
+   width: 1920px;
+   height: 1920px;
    max-width: none;
+
+   /* THE MATH: Place the left edge exactly in the middle of the phone screen, 
+      then pull it back by exactly half of the image's total width (960px). */
+   left: 50%;
+   margin-left: -960px; 
 }
 
 .fixed-bottom {
