@@ -3,25 +3,29 @@
 <head>
 <title>Iggig Salad</title>
 <link rel="icon" href="icon.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
-/*
 body {
    margin: 0;
-   background-color: cornflowerblue;
+   width: 100vw;
    overflow-x: hidden;
 }
-*/
-body {
-   margin: 0;
+
+.scroll-viewport {
    display: flex;
-   justify-content: center;
+   width: 100vw;
    overflow-x: hidden;
+   overflow-y: visible;
 }
 
 #background-image {
    z-index: -9999;
-   flex-shrink: 0;
-   object-fit: none;
+
+   position: absolute;
+   left: 50%;
+   transform: translateX(-50%);
+
+   max-width: none;
 }
 
 .fixed-bottom {
@@ -44,6 +48,8 @@ body {
 </div>
 -->
 
+<div class="scroll-viewport">
+
 <map id="background-map">
 <area shape="circle" alt="" title="" coords="386, 372, 22" href="" target="" />
 <area shape="circle" alt="" title="" coords="510, 347, 24" href="" target="" />
@@ -51,6 +57,7 @@ body {
 
 <!-- Draw the background. -->
 <img id="background-image" src="tree.png" alt="" usemap="#background-map" />
+</div>
 
 <!--
 <div style="position: fixed; top: 0;">
@@ -67,12 +74,12 @@ body {
 <a href="art-chocolate.html">
 <h1>Art Chocolate</h1>
 </a>
--->
+
 
 <a style="position: absolute; left: calc(50% + 320px); top: calc(2400px - 960px)"  href="music-gallery.html" title="&#9835; Music Gallery &#9835;">
 <img src="jukebox.png" alt="" />
 </a>
-
+-->
 <script>
 /*
    When the page loads, and the page hasn't been visited before, scroll to the bottom.
