@@ -83,6 +83,42 @@ const camera = {
    deltaY: 0,
 };
 
+// Track the starting Y position of the touch
+let touchStartY = 0;
+
+// Capture the initial touch point
+canvas.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 1) { 
+        touchStartY = e.touches[0].clientY;
+    }
+}, { passive: true });
+
+// Track the movement and update the camera scroll
+canvas.addEventListener('touchmove', (e) => {
+    if (e.touches.length === 1) {
+        const touchCurrentY = e.touches[0].clientY;
+        
+        // Calculate how far the finger moved
+        // Inverting this (touchStartY - touchCurrentY) matches natural mobile scrolling
+        const deltaY = touchStartY - touchCurrentY;
+
+        // --- INTEGRATE WITH YOUR EXISTING CODE ---
+        // Replace 'camera.y' with your project's actual camera/scroll Y variable
+        camera.y += deltaY; 
+        
+        // If you have a bounding function or limits, apply it here:
+        // camera.y = Math.max(0, Math.min(camera.y, maxScrollHeight));
+        // -----------------------------------------
+
+        // Update the starting point for the next frame of the drag
+        touchStartY = touchCurrentY;
+
+        // Trigger your existing draw/render function to update the canvas canvas view
+        draw(); 
+    }
+}, { passive: true });
+
+
 /*
    The camera's scroll position is stored locally,
    so the view can remain where it was if returning to this page.
