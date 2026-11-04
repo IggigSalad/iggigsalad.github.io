@@ -3,7 +3,7 @@
 <head>
 <title>Iggig Salad</title>
 <link rel="icon" href="icon.png" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <style>
 
 body {
@@ -143,7 +143,7 @@ update_canvas_size();
 */
 canvas.addEventListener('wheel', (event) => {
    event.preventDefault();
-   camera.deltaY += event.deltaY;
+   camera.deltaY =/*+=*/ event.deltaY;
 }, {
    passive: false
 });
@@ -158,7 +158,7 @@ function step() {
 
    // Update scroll position and lock inside boundaries
    camera.y = Math.min(Math.max(camera.y + (camera.deltaY * scale), 0), maxScroll);
-   camera.deltaY = 0;
+//   camera.deltaY = 0;
    sessionStorage.setItem('homepage_scroll_y', camera.y);
 
    // Wipes the canvas clean before redraws to prevent smearing
