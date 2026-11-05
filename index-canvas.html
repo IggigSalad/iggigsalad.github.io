@@ -1,36 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>Iggig Salad</title>
 <link rel="icon" href="icon.png" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 user-scalable=no" />
+
 <style>
+   body {
+      margin: 0;
+      overflow: hidden;
+      width: 100dvw;
+      height: 100dvh;
+   }
 
-body {
-   margin: 0;
-   overflow: hidden;
-   width: 100dvw;
-   height: 100vdh;
-/*
-   width: 100vw;
-   min-height: 100vh;
-   height: 960px;
-   overflow-x: hidden;
-   background-image: url("tree.png");
-   background-position: center bottom;
-   background-repeat: no-repeat;
-   background-size: cover;
-*/
-}
-
-canvas {
-   width: 100%;
-   height: 100%;
-}
-
+   canvas {
+      width: 100%;
+      height: 100%;
+   }
 </style>
-</head>
 
+</head>
 <body>
 
 <!--
@@ -65,7 +56,7 @@ canvas {
 -->
 
 <div style="display:none;">
-<img id="scream" src="tree.png">
+<img id="background-image" src="tree.png">
 </div>
 
 <canvas id="myCanvas" width="200px" height="100px">
@@ -74,9 +65,8 @@ canvas {
 <script>
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext("2d");
-const image = document.getElementById("scream");
+const image = document.getElementById("background-image");
 
-const min_view_width = 1280;
 let scale = 1;
 
 const camera = {
@@ -89,35 +79,22 @@ const camera = {
 let touchStartY = 0;
 
 // Capture the initial touch point
-canvas.addEventListener('touchstart', (e) => {
-    if (e.touches.length === 1) { 
-        touchStartY = e.touches[0].clientY;
-    }
+canvas.addEventListener('touchstart', (event) => {
+   if (event.touches.length === 1) {
+      touchStartY = event.touches[0].clientY;
+   }
 }, { passive: true });
 
 // Track the movement and update the camera scroll
-canvas.addEventListener('touchmove', (e) => {
-    if (e.touches.length === 1) {
-        const touchCurrentY = e.touches[0].clientY;
-        
-        // Calculate how far the finger moved
-        // Inverting this (touchStartY - touchCurrentY) matches natural mobile scrolling
-        const deltaY = touchStartY - touchCurrentY;
+canvas.addEventListener('touchmove', (event) => {
+   if (event.touches.length !== 1) {
+      return;
+   }
 
-        // --- INTEGRATE WITH YOUR EXISTING CODE ---
-        // Replace 'camera.y' with your project's actual camera/scroll Y variable
-        camera.y += deltaY*2; 
-        
-        // If you have a bounding function or limits, apply it here:
-        // camera.y = Math.max(0, Math.min(camera.y, maxScrollHeight));
-        // -----------------------------------------
-
-        // Update the starting point for the next frame of the drag
-        touchStartY = touchCurrentY;
-
-        // Trigger your existing draw/render function to update the canvas canvas view
-        draw(); 
-    }
+   const touchCurrentY = event.touches[0].clientY;
+   const deltaY = touchStartY - touchCurrentY;
+   touchStartY = touchCurrentY;
+   camera.y += deltaY * 3;
 }, { passive: true });
 
 
@@ -126,55 +103,52 @@ canvas.addEventListener('touchmove', (e) => {
    so the view can remain where it was if returning to this page.
 */
 let stored_scroll_y = sessionStorage.getItem('homepage_scroll_y');
-if (stored_scroll_y != null) camera.y = stored_scroll_y;
+if (stored_scroll_y !== null && stored_scroll_y !== NaN) camera.y = stored_scroll_y;
 
 /*
    Update the canvas' internal size when the window is resized.
 */
-function update_canvas_size() {
+window.addEventListener('resize', () => {
+   const min_view_width = 1280;
    canvas.width = window.innerWidth * window.devicePixelRatio;
    canvas.height = window.innerHeight * window.devicePixelRatio;
-   scale = Math.max(canvas.width, min_view_width) / 1920;
-   scale = Math.max(scale, canvas.height / 1920);
-}
+   scale = Math.max(canvas.width, min_view_width) / image.naturalWidth;
+   scale = Math.max(scale, canvas.height / image.naturalHeight);
+});
 
-window.addEventListener('resize', update_canvas_size);
-update_canvas_size();
 
 /*
    Get the scroll wheel's input.
 */
 canvas.addEventListener('wheel', (event) => {
    event.preventDefault();
-   camera.deltaY =/*+=*/ event.deltaY;
+   camera.deltaY = event.deltaY;
 }, {
    passive: false
 });
 
 function step() {
-   let _image_width = 1920 * scale;
-   let _image_height = 1920 * scale;
+   let image_width = image.naturalWidth * scale;
+   let image_height = image.naturalHeight * scale;
+   let image_x = (canvas.width / 2) - (image_width / 2);
 
-   let _x = (canvas.width / 2) - (_image_width / 2);
-   // Calculates maximum upward scroll limit based on the height differences
-   let maxScroll = Math.max(0, _image_height - canvas.height);
+   let min_scroll = 0;
+   let max_scroll = Math.max(0, image_height - canvas.height);
 
-   // Update scroll position and lock inside boundaries
-   camera.y = Math.min(Math.max(camera.y + (camera.deltaY * scale), 0), maxScroll);
-//   camera.deltaY = 0;
+   camera.y += camera.deltaY * scale;
+   camera.y = Math.min(Math.max(camera.y, min_scroll), max_scroll);
+   camera.deltaY = 0;
+
    sessionStorage.setItem('homepage_scroll_y', camera.y);
 
-   // Wipes the canvas clean before redraws to prevent smearing
    context.clearRect(0, 0, canvas.width, canvas.height);
-
-   // Draw the tree image based on the scroll camera position
-   // -camera.y moves the drawing context upwards as you scroll down
-   context.drawImage(image, _x, -camera.y, _image_width, _image_height);
+   context.drawImage(image, image_x, -camera.y, image_width, image_height);
 
    requestAnimationFrame(step);
 }
 
 window.addEventListener("load", () => {
+   window.dispatchEvent(new Event("resize"));
    requestAnimationFrame(step);
 });
 
@@ -191,7 +165,6 @@ if (time_of_day == "night") {
    document.body.style.backgroundColor = "midnightblue";
 }
 </script>
-
 
 </body>
 </html>
