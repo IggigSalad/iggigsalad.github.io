@@ -13,11 +13,13 @@
       overflow: hidden;
       width: 100dvw;
       height: 100dvh;
+      background-color: cornflowerblue;
    }
 
    canvas {
       width: 100%;
       height: 100%;
+      image-rendering: pixelated;
    }
 </style>
 
@@ -75,35 +77,51 @@ const camera = {
    deltaY: 0,
 };
 
-// Track the starting Y position of the touch
-let touchStartY = 0;
-
-// Capture the initial touch point
-canvas.addEventListener('touchstart', (event) => {
-   if (event.touches.length === 1) {
-      touchStartY = event.touches[0].clientY;
-   }
-}, { passive: true });
-
-// Track the movement and update the camera scroll
-canvas.addEventListener('touchmove', (event) => {
-   if (event.touches.length !== 1) {
-      return;
-   }
-
-   const touchCurrentY = event.touches[0].clientY;
-   const deltaY = touchStartY - touchCurrentY;
-   touchStartY = touchCurrentY;
-   camera.y += deltaY * 3;
-}, { passive: true });
-
-
 /*
    The camera's scroll position is stored locally,
    so the view can remain where it was if returning to this page.
 */
 let stored_scroll_y = sessionStorage.getItem('homepage_scroll_y');
 if (stored_scroll_y !== null && stored_scroll_y !== NaN) camera.y = stored_scroll_y;
+
+/*
+   Use the scroll wheel's input to scroll the camera.
+*/
+canvas.addEventListener('wheel', (event) => {
+   event.preventDefault();
+   camera.deltaY = event.deltaY;
+}, {
+   passive: false
+});
+
+/*
+   Track the starting Y position of touch input.
+*/
+let touch_start_y = 0;
+
+canvas.addEventListener('touchstart', (event) => {
+   if (event.touches.length === 1) {
+      touch_start_y = event.touches[0].clientY;
+   }
+}, {
+   passive: true
+});
+
+/*
+   Use touch input to scroll the camera.
+*/
+canvas.addEventListener('touchmove', (event) => {
+   if (event.touches.length !== 1) {
+      return;
+   }
+
+   const touch_current_y = event.touches[0].clientY;
+   const deltaY = touch_start_y - touch_current_y;
+   touch_start_y = touch_current_y;
+   camera.deltaY = deltaY;
+}, {
+   passive: true
+});
 
 /*
    Update the canvas' internal size when the window is resized.
@@ -116,24 +134,13 @@ window.addEventListener('resize', () => {
    scale = Math.max(scale, canvas.height / image.naturalHeight);
 });
 
-
-/*
-   Get the scroll wheel's input.
-*/
-canvas.addEventListener('wheel', (event) => {
-   event.preventDefault();
-   camera.deltaY = event.deltaY;
-}, {
-   passive: false
-});
-
 function step() {
-   let image_width = image.naturalWidth * scale;
-   let image_height = image.naturalHeight * scale;
-   let image_x = (canvas.width / 2) - (image_width / 2);
+   const image_width = image.naturalWidth * scale;
+   const image_height = image.naturalHeight * scale;
+   const image_x = (canvas.width / 2) - (image_width / 2);
 
-   let min_scroll = 0;
-   let max_scroll = Math.max(0, image_height - canvas.height);
+   const min_scroll = 0;
+   const max_scroll = Math.max(0, image_height - canvas.height);
 
    camera.y += camera.deltaY * scale;
    camera.y = Math.min(Math.max(camera.y, min_scroll), max_scroll);
@@ -143,13 +150,34 @@ function step() {
 
    context.clearRect(0, 0, canvas.width, canvas.height);
    context.drawImage(image, image_x, -camera.y, image_width, image_height);
-
+context.globalCompositeOperation = "overlay";
+//   context.clearRect(x, y, 128, 128);
+   context.beginPath();
+   context.arc(x, y, 100, 0, Math.PI * 2, true); // Outer circle
+   let my_gradient = context.createRadialGradient(x, y, 5, x, y, 100);
+   my_gradient.addColorStop(0, "black");
+   my_gradient.addColorStop(0.5, "red");
+   my_gradient.addColorStop(1, "white");
+   context.fillStyle = my_gradient;
+   context.fill();
+context.globalCompositeOperation = "source-over";
    requestAnimationFrame(step);
 }
 
 window.addEventListener("load", () => {
    window.dispatchEvent(new Event("resize"));
    requestAnimationFrame(step);
+});
+
+let x = 0;
+let y = 0;
+
+canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    
+    // Calculate coordinates relative to the canvas
+    x = event.clientX - rect.left;
+    y = event.clientY - rect.top;
 });
 
 let hour = new Date().getHours();
