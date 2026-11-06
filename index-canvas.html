@@ -5,22 +5,21 @@
 <title>Iggig Salad</title>
 <link rel="icon" href="icon.png" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 user-scalable=no" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 <style>
-   body {
-      margin: 0;
-      overflow: hidden;
-      width: 100dvw;
-      height: 100dvh;
-      background-color: cornflowerblue;
-   }
+body {
+   margin: 0;
+   overflow-x: hidden;
+   width: 100dvw;
+   height: 100dvh;
+   background-color: cornflowerblue;
+}
 
-   canvas {
-      width: 100%;
-      height: 100%;
-      image-rendering: pixelated;
-   }
+canvas {
+   display: block;
+   width: 100%;
+}
 </style>
 
 </head>
@@ -55,11 +54,11 @@
 <a style="position: absolute; left: calc(50% + 320px); top: calc(2400px - 960px)"  href="music-gallery.html" title="&#9835; Music Gallery &#9835;">
 <img src="jukebox.png" alt="" />
 </a>
--->
 
 <div style="display:none;">
 <img id="background-image" src="tree.png">
 </div>
+-->
 
 <canvas id="myCanvas" width="200px" height="100px">
 </canvas>
@@ -67,103 +66,55 @@
 <script>
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext("2d");
-const image = document.getElementById("background-image");
+let global_scale = 1;
 
-let scale = 1;
+function load_image(url) {
+   const image_element = new Image();
+   image_element.src = url;
+   return image_element;
+}
 
-const camera = {
-   x: 0,
-   y: 9999,
-   deltaY: 0,
-};
+const background_image = load_image("tree.png");
+//const iggig_image = load_image("iggig-relaxed.png");
 
-/*
-   The camera's scroll position is stored locally,
-   so the view can remain where it was if returning to this page.
-*/
-let stored_scroll_y = sessionStorage.getItem('homepage_scroll_y');
-if (stored_scroll_y !== null && stored_scroll_y !== NaN) camera.y = stored_scroll_y;
-
-/*
-   Use the scroll wheel's input to scroll the camera.
-*/
-canvas.addEventListener('wheel', (event) => {
-   event.preventDefault();
-   camera.deltaY += event.deltaY;
-}, {
-   passive: false
-});
-
-/*
-   Track the starting Y position of touch input.
-*/
-let touch_start_y = 0;
-
-canvas.addEventListener('touchstart', (event) => {
-   if (event.touches.length === 1) {
-      touch_start_y = event.touches[0].clientY;
-   }
-}, {
-   passive: true
-});
-
-/*
-   Use touch input to scroll the camera.
-*/
-canvas.addEventListener('touchmove', (event) => {
-   if (event.touches.length !== 1) {
-      return;
-   }
-
-   const touch = event.touches[0];
-   const touch_current_y = touch.clientY;
-   const deltaY = touch_start_y - touch_current_y;
-   touch_start_y = touch_current_y;
-   camera.deltaY = deltaY;
-
-   const rect = canvas.getBoundingClientRect();
-
-   // Calculate coordinates relative to the canvas
-   x = touch.clientX - rect.left;
-   y = touch.clientY - rect.top;
-
-}, {
-   passive: true
-});
-
-/*
-   Update the canvas' internal size when the window is resized.
-*/
+// Update the canvas' internal size when the window is resized.
 window.addEventListener('resize', () => {
    const min_view_width = 1280;
-   canvas.width = window.innerWidth * window.devicePixelRatio;
-   canvas.height = window.innerHeight * window.devicePixelRatio;
-   scale = Math.max(canvas.width, min_view_width) / image.naturalWidth;
-   scale = Math.max(scale, canvas.height / image.naturalHeight);
+   const pixel_ratio = window.devicePixelRatio;
+
+   canvas.width = window.innerWidth * pixel_ratio;
+
+   global_scale = Math.max(canvas.width, min_view_width * pixel_ratio) / background_image.naturalWidth;
+   global_scale = Math.max(global_scale, window.innerHeight * pixel_ratio / background_image.naturalHeight);
+
+   canvas.height = Math.max(window.innerHeight * pixel_ratio, background_image.naturalHeight * global_scale);
+   canvas.style.height = (canvas.height / pixel_ratio) + "px";
 });
 
+function draw_sprite(sprite, x, y) {
+   const draw_x = x;//(x - sprite.offset.x) * global_scale - camera.x;
+   const draw_y = -camera.y;(y - sprite.offset.y) * global_scale - camera.y;
+
+   const width = sprite.image.naturalWidth * global_scale;
+   const height = sprite.image.naturalHeight * global_scale;
+
+   context.drawImage(sprite.image, draw_x, draw_y, width, height);
+}
+
 function step() {
-   const image_width = image.naturalWidth * scale;
-   const image_height = image.naturalHeight * scale;
-   const image_x = (canvas.width / 2) - (image_width / 2);
-
-   const min_scroll = 0;
-   const max_scroll = Math.max(0, image_height - canvas.height);
-
-   camera.y += camera.deltaY * scale;
-   camera.y = Math.min(Math.max(camera.y, min_scroll), max_scroll);
-   camera.deltaY = 0;
-
-   sessionStorage.setItem('homepage_scroll_y', camera.y);
-
+   // Clear the canvas.
    context.clearRect(0, 0, canvas.width, canvas.height);
-   context.drawImage(image, image_x, -camera.y, image_width, image_height);
 
-   const mouse_x = x * window.devicePixelRatio;
-   const mouse_y = y * window.devicePixelRatio;
+   // Draw the background.
+   const _width = background_image.naturalWidth * global_scale;
+   const _height = background_image.naturalHeight * global_scale;
+   const _x = (canvas.width / 2) - (_width / 2);
+   const _y = 0;
+   context.drawImage(background_image, _x, _y, _width, _height);
 
-context.globalCompositeOperation = "overlay";
-//   context.clearRect(x, y, 128, 128);
+/*
+   context.globalCompositeOperation = "overlay";
+
    context.beginPath();
    context.arc(mouse_x, mouse_y, 100, 0, Math.PI * 2, true); // Outer circle
    let my_gradient = context.createRadialGradient(mouse_x, mouse_y, 5, mouse_x, mouse_y, 100);
@@ -172,24 +123,26 @@ context.globalCompositeOperation = "overlay";
    my_gradient.addColorStop(1, "white");
    context.fillStyle = my_gradient;
    context.fill();
-context.globalCompositeOperation = "source-over";
+   context.globalCompositeOperation = "source-over";
+*/
+
    requestAnimationFrame(step);
 }
 
+const first_visit = !sessionStorage.getItem('homepage_was_visited');
+
+
 window.addEventListener("load", () => {
    window.dispatchEvent(new Event("resize"));
-   requestAnimationFrame(step);
-});
 
-let x = 0;
-let y = 0;
+   requestAnimationFrame(() => {
+      if (first_visit) {
+         sessionStorage.setItem('homepage_was_visited', true);
+         window.scrollTo(0, document.documentElement.scrollHeight);
+      }
 
-canvas.addEventListener('mousemove', (event) => {
-    const rect = canvas.getBoundingClientRect();
-    
-    // Calculate coordinates relative to the canvas
-    x = event.clientX - rect.left;
-    y = event.clientY - rect.top;
+      step();
+   });
 });
 
 let hour = new Date().getHours();
