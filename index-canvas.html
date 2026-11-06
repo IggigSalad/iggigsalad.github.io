@@ -89,7 +89,7 @@ if (stored_scroll_y !== null && stored_scroll_y !== NaN) camera.y = stored_scrol
 */
 canvas.addEventListener('wheel', (event) => {
    event.preventDefault();
-   camera.deltaY = event.deltaY;
+   camera.deltaY += event.deltaY;
 }, {
    passive: false
 });
@@ -115,10 +115,18 @@ canvas.addEventListener('touchmove', (event) => {
       return;
    }
 
-   const touch_current_y = event.touches[0].clientY;
+   const touch = event.touches[0];
+   const touch_current_y = touch.clientY;
    const deltaY = touch_start_y - touch_current_y;
    touch_start_y = touch_current_y;
    camera.deltaY = deltaY;
+
+   const rect = canvas.getBoundingClientRect();
+
+   // Calculate coordinates relative to the canvas
+   x = touch.clientX - rect.left;
+   y = touch.clientY - rect.top;
+
 }, {
    passive: true
 });
@@ -150,11 +158,15 @@ function step() {
 
    context.clearRect(0, 0, canvas.width, canvas.height);
    context.drawImage(image, image_x, -camera.y, image_width, image_height);
+
+   const mouse_x = x * window.devicePixelRatio;
+   const mouse_y = y * window.devicePixelRatio;
+
 context.globalCompositeOperation = "overlay";
 //   context.clearRect(x, y, 128, 128);
    context.beginPath();
-   context.arc(x, y, 100, 0, Math.PI * 2, true); // Outer circle
-   let my_gradient = context.createRadialGradient(x, y, 5, x, y, 100);
+   context.arc(mouse_x, mouse_y, 100, 0, Math.PI * 2, true); // Outer circle
+   let my_gradient = context.createRadialGradient(mouse_x, mouse_y, 5, mouse_x, mouse_y, 100);
    my_gradient.addColorStop(0, "black");
    my_gradient.addColorStop(0.5, "red");
    my_gradient.addColorStop(1, "white");
